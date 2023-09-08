@@ -10,7 +10,13 @@ body {
 .breed-select {
     padding: 10px;
     font-size: 16px;
+    box-shadow: 0 0 8px 3px rgb(107, 106, 104) ;
+    background-color: #b2ada386;
+    border: 1px solid rgb(116, 113, 108);
+    border-radius: 8px;
+    padding-left: 5px;
 }
+
 
 .loader {
     display: none;
@@ -31,7 +37,8 @@ body {
 }
 
 h1 {
-    background-color: #83b7c5;
+    background-image: url(./img/britanskaya_korotkosherstnaya_koshka_opisanie_porody.jpg);
+    background-position: center;
     color: white;
     padding: 20px;
     margin: 0;
