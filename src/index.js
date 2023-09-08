@@ -1,53 +1,49 @@
-import axios from "axios";
-const API_KEY = "live_vso7R99E2iH3rFOZoPtpnMXsV2cSGXQW6t8g9JgTLCa9Hjp5OnIe2J8KHHe0v3ef";
-axios.defaults.headers.common["x-api-key"] = API_KEY;
-const BREEDS_URL = "https://api.thecatapi.com/v1/breeds";
-const CAT_INFO_URL = "https://api.thecatapi.com/v1/images/search";
+
+import { fetchBreeds, fetchCatByBreed } from "./cat-api.js";
+
+const breedSelect = document.getElementById("breedSelect");
+const loader = document.getElementById("loader");
+const error = document.getElementById("error");
+const catInfo = document.getElementById("catInfo");
+const catImage = document.getElementById("catImage");
+const breedName = document.getElementById("breedName");
+const breedDescription = document.getElementById("breedDescription");
+const breedTemperament = document.getElementById("breedTemperament");
 
 
-// Функція для отримання списку порід кішок
-export function fetchBreeds() {
-  return axios
-    .get(API_URL)
-    .then(response => {
-      // Успішно отримано дані про породи
-      return response.data.map(breed => ({
-        id: breed.id,
-        name: breed.name
-      }));
+fetchBreeds()
+    .then(breeds => {
+        breeds.forEach(breed => {
+            const option = document.createElement("option");
+            option.value = breed.id;
+            option.textContent = breed.name;
+            breedSelect.appendChild(option);
+        });
     })
-    .catch(error => {
-      // Обробка помилок, якщо вони виникли під час запиту
-      throw error;
+    .catch(err => {
+        console.log(err)
     });
-}
-// Функція для отримання інформації про кота за ідентифікатором породи
-export function fetchCatByBreed(breedId) {
-  const params = {
-    breed_ids: breedId,
-  };
 
-  return axios
-    .get(CAT_INFO_URL, { params })
-    .then(response => {
-      const catData = response.data[0];
-      return {
-        imageUrl: catData.url,
-        breed: catData.breeds[0].name,
-        description: catData.breeds[0].description,
-        temperament: catData.breeds[0].temperament,
-      };
-    })
-    .catch(error => {
-      throw error;
-    });
-}
-// const renderList = (arr, container) => {
-//     const markup = arr.map((item) => `
-//     <img src="${catData.url}" alt="${catData.breeds[0].name}">
-//         <h2>${catData.breeds[0].name}</h2>
-//         <p>${catData.breeds[0].description}</p>
-//         <p><strong>Темперамент:</strong> ${catData.breeds[0].temperament}</p>`
-//     )
-// }
-// searchForm.addEventListener("submit", searchSubmitHandleer);
+
+breedSelect.addEventListener("change", () => {
+    const selectedBreedId = breedSelect.value;
+    if (selectedBreedId) {
+        loader.style.display = "block";
+        catInfo.style.display = "none";
+        error.style.display = "none";
+
+        fetchCatByBreed(selectedBreedId)
+            .then(cat => {
+                catImage.src = cat.url;
+                breedName.textContent = cat.breeds[0].name;
+                breedDescription.textContent = cat.breeds[0].description;
+                breedTemperament.textContent = `Temperament: ${cat.breeds[0].temperament}`;
+
+                loader.style.display = "none";
+                catInfo.style.display = "block";
+            })
+            .catch(err => {
+                console.log(err)
+            });
+    }
+});
