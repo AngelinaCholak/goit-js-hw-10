@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(err);
             loader.style.display = "none";
             error.style.display = "block"; 
+            error.textContent = "Oops! Something went wrong! Try reloading the page!";
         });
 
     breedSelect.addEventListener("change", () => {
@@ -52,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log(err);
                     loader.style.display = "none";
                     error.style.display = "block"; 
+                    error.textContent = "Oops! Something went wrong! Try reloading the page!";
                 });
         }
     });
